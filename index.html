@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我的世界机械动力蓝图共享网站 - WMCS</title>
+    <style>
+        :root {
+            --primary: #4A6CF7;
+            --primary-dark: #3651d5;
+            --primary-light: #eef1fe;
+            --bg: #f0f4f8;
+            --card-bg: #ffffff;
+            --text: #2d3748;
+            --text-secondary: #718096;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --success-light: #ecfdf5;
+            --error: #ef4444;
+            --error-light: #fef2f2;
+            --warning: #f59e0b;
+            --warning-light: #fffbeb;
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1), 0 4px 10px rgba(0, 0, 0, 0.06);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --transition: 0.2s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        /* 背景装饰 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -200px;
+            right: -200px;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(74, 108, 247, 0.06) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -150px;
+            left: -150px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.05) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 750px;
+            position: relative;
+            z-index: 1;
+            margin-top: 20px;
+        }
+
+        /* 头部 */
+        .header {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .header .logo-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, #4A6CF7, #6d8cff);
+            border-radius: 18px;
+            margin-bottom: 14px;
+            box-shadow: 0 10px 25px rgba(74, 108, 247, 0.35);
+            font-size: 2rem;
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .header h1 {
+            font-size: 1.9rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+        .header .subtitle {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .header .subtitle span {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.8rem;
+        }
+
+        /* 卡片 */
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 24px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            transition: box-shadow var(--transition);
+        }
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+        }
+        .card-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-title .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: inline-block;
+        }
+
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+        .form-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            transition: all var(--transition);
+            background: #fafbfc;
+            font-family: inherit;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 108, 247, 0.1);
+            background: #fff;
+        }
+        .form-input.error {
+            border-color: var(--error);
+            background: #fff5f5;
+        }
+        .input-hint {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        .input-error {
+            font-size: 0.75rem;
+            color: var(--error);
+            margin-top: 4px;
+            display: none;
+        }
+        .input-error.active {
+            display: block;
+        }
+        .file-select-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .file-select-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 18px;
+            background: #fff;
+            border: 1.5px dashed var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: all var(--transition);
+            white-space: nowrap;
+        }
+        .file-select-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+        .file-select-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+        .file-name-display {
+            font-size: 0.85rem;
+            color: var(--text);
+            background: #f0f4ff;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 500;
+            max-width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .image-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: var(--radius-sm);
+            border: 1.5px dashed var(--border);
+            background: #fafbfc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-top: 8px;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            color: #cbd5e1;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+        .image-preview.has-image {
+            border-style: solid;
+            border-color: #d0d7e2;
+        }
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        .image-preview.has-image img {
+            display: block;
+        }
+        .image-preview .placeholder-text {
+            position: absolute;
+            pointer-events: none;
+        }
+        .image-preview.has-image .placeholder-text {
+            display: none;
+        }
+
+        /* 按钮 */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all var(--transition);
+            text-decoration: none;
+            white-space: nowrap;
+            font-family: inherit;
+        }
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(74, 108, 247, 0.3);
+        }
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(74, 108, 247, 0.4);
+        }
+        .btn-primary:disabled {
+            background: #b0c4ff;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .btn-outline {
+            background: #fff;
+            color: var(--primary);
+            border: 1.5px solid var(--primary);
+        }
+        .btn-outline:hover {
+            background: var(--primary-light);
+        }
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 0.8rem;
+            border-radius: 6px;
+        }
+        .btn-download {
+            background: #fff;
+            color: var(--primary);
+            border: 1.5px solid #d0d7e2;
+            cursor: pointer;
+        }
+        .btn-download:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            box-shadow: 0 2px 8px rgba(74, 108, 247, 0.15);
+        }
+        .btn-refresh {
+            background: #fff;
+            color: var(--text-secondary);
+            border: 1.5px solid var(--border);
+            cursor: pointer;
+            padding: 7px 12px;
+            border-radius: 6px;
+            transition: all var(--transition);
+        }
+        .btn-refresh:hover {
+            border-color: #c4cdd8;
+            color: var(--text);
+            background: #f9fafb;
+        }
+
+        /* 上传进度 */
+        .upload-progress {
+            margin-top: 16px;
+            display: none;
+        }
+        .upload-progress.active {
+            display: block;
+        }
+        .progress-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            background: #f9fafb;
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+            border: 1px solid var(--border);
+            transition: all var(--transition);
+        }
+        .progress-item.completed {
+            background: var(--success-light);
+            border-color: #a7f3d0;
+        }
+        .progress-item.error {
+            background: var(--error-light);
+            border-color: #fecaca;
+        }
+        .progress-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .progress-info .filename {
+            font-size: 0.85rem;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--text);
+        }
+        .progress-bar-track {
+            width: 100%;
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            margin-top: 4px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            height: 100%;
+            background: var(--primary);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+        .progress-item.completed .progress-bar-fill {
+            background: var(--success);
+        }
+        .progress-item.error .progress-bar-fill {
+            background: var(--error);
+        }
+
+        /* 文件列表表格 */
+        .file-list-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .file-count {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        .file-count span {
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .file-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .file-table th, .file-table td {
+            padding: 12px 10px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
+            vertical-align: middle;
+        }
+        .file-table th {
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            background: #fafbfc;
+        }
+        .file-table tbody tr:hover {
+            background: #f8faff;
+        }
+        .file-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .file-name-cell {
+            font-weight: 500;
+            color: var(--text);
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .file-thumb {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            background: #eef2ff;
+            background-size: cover;
+            background-position: center;
+            flex-shrink: 0;
+            border: 1px solid #eee;
+        }
+        .file-thumb.placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f0f4ff;
+            color: #a0aec0;
+            font-size: 0.65rem;
+            font-weight: 600;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+        .empty-state svg {
+            width: 60px;
+            height: 60px;
+            color: #cbd5e1;
+            margin-bottom: 12px;
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+        }
+        .toast {
+            padding: 12px 18px;
+            border-radius: var(--radius-sm);
+            color: #fff;
+            font-size: 0.875rem;
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+            animation: slideIn 0.35s ease, fadeOut 0.35s ease 3s forwards;
+            max-width: 380px;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .toast.success { background: #059669; }
+        .toast.error { background: #dc2626; }
+        .toast.info { background: #4A6CF7; }
+        @keyframes slideIn {
+            from { transform: translateX(120%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+
+        @media (max-width: 600px) {
+            .header h1 { font-size: 1.5rem; }
+            .file-select-row { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- 头部 -->
+    <div class="header">
+        <div class="logo-icon">⚙️</div>
+        <h1>我的世界机械动力蓝图共享网站</h1>
+        <div class="subtitle">
+            <span>WMCS</span> Wu8 Minecraft Create Schematics
+        </div>
+    </div>
+
+    <!-- 上传卡片 -->
+    <div class="card">
+        <div class="card-title"><span class="dot"></span> 上传新蓝图</div>
+        <div class="form-group">
+            <label class="form-label" for="blueprintName">蓝图名称 <span style="color:#ef4444;">*</span></label>
+            <input type="text" id="blueprintName" class="form-input" placeholder="例如：精密活塞门.nbt" autocomplete="off">
+            <div class="input-hint">必须包含 .nbt 扩展名，且不能与已有蓝图重复</div>
+            <div class="input-error" id="nameError">❌ 该名称已存在，请重新输入</div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">选择 .nbt 文件 <span style="color:#ef4444;">*</span></label>
+            <div class="file-select-row">
+                <label class="file-select-btn" for="nbtFileInput">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/></svg>
+                    选择 NBT 文件
+                </label>
+                <span class="file-name-display" id="nbtFileName">未选择文件</span>
+                <input type="file" id="nbtFileInput" accept=".nbt" style="display:none;">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label">蓝图预览图 <span style="color:#ef4444;">*</span></label>
+            <div class="file-select-row">
+                <label class="file-select-btn" for="imageFileInput">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    选择图片
+                </label>
+                <span class="file-name-display" id="imageFileName">未选择图片</span>
+                <input type="file" id="imageFileInput" accept="image/*" style="display:none;">
+            </div>
+            <div class="image-preview" id="imagePreview">
+                <span class="placeholder-text">预览图</span>
+                <img id="previewImg" alt="预览">
+            </div>
+        </div>
+        <button class="btn btn-primary" id="uploadBtn" disabled>上传蓝图</button>
+        <div class="upload-progress" id="uploadProgress"></div>
+    </div>
+
+    <!-- 文件列表卡片 -->
+    <div class="card">
+        <div class="file-list-header">
+            <div class="card-title" style="margin-bottom:0;"><span class="dot"></span> 蓝图库</div>
+            <div style="display:flex;align-items:center;gap:8px;">
+                <span class="file-count">共 <span id="fileCount">0</span> 个蓝图</span>
+                <button class="btn-refresh" id="btnRefresh" title="刷新列表">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+                </button>
+            </div>
+        </div>
+        <div style="overflow-x:auto;">
+            <table class="file-table">
+                <thead><tr><th>预览</th><th>蓝图名称</th><th>大小</th><th>上传时间</th><th>操作</th></tr></thead>
+                <tbody id="fileTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Toast 容器 -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+    (function() {
+        // DOM 元素
+        const blueprintNameInput = document.getElementById('blueprintName');
+        const nameError = document.getElementById('nameError');
+        const nbtFileInput = document.getElementById('nbtFileInput');
+        const nbtFileNameDisplay = document.getElementById('nbtFileName');
+        const imageFileInput = document.getElementById('imageFileInput');
+        const imageFileNameDisplay = document.getElementById('imageFileName');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewImg = document.getElementById('previewImg');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const uploadProgress = document.getElementById('uploadProgress');
+        const fileTableBody = document.getElementById('fileTableBody');
+        const fileCountEl = document.getElementById('fileCount');
+        const btnRefresh = document.getElementById('btnRefresh');
+        const toastContainer = document.getElementById('toastContainer');
+
+        let selectedNbtFile = null;
+        let selectedImageFile = null;
+        let nameCheckTimer = null;
+        let isNameValid = false;
+
+        // Toast
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+            toast.innerHTML = `${icons[type] || 'ℹ️'} ${message}`;
+            toastContainer.appendChild(toast);
+            setTimeout(() => { if (toast.parentNode) toast.remove(); }, 3500);
+        }
+
+        // 格式化
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        function formatTime(dateStr) {
+            const date = new Date(dateStr);
+            const now = new Date();
+            const diff = now - date;
+            const mins = Math.floor(diff / 60000);
+            if (mins < 1) return '刚刚';
+            if (mins < 60) return mins + ' 分钟前';
+            const hours = Math.floor(diff / 3600000);
+            if (hours < 24) return hours + ' 小时前';
+            const days = Math.floor(diff / 86400000);
+            if (days < 7) return days + ' 天前';
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        // 检查文件名是否重复
+        async function checkFilename(name) {
+            if (!name || !name.endsWith('.nbt')) {
+                nameError.classList.remove('active');
+                isNameValid = false;
+                updateUploadButton();
+                return;
+            }
+            try {
+                const resp = await fetch(`/api/check-filename?name=${encodeURIComponent(name)}`);
+                if (!resp.ok) throw new Error('检查失败');
+                const data = await resp.json();
+                if (data.exists) {
+                    nameError.classList.add('active');
+                    isNameValid = false;
+                } else {
+                    nameError.classList.remove('active');
+                    isNameValid = true;
+                }
+            } catch (e) {
+                console.error('文件名检查出错', e);
+                nameError.classList.add('active');
+                nameError.textContent = '⚠️ 无法验证名称，请稍后重试';
+                isNameValid = false;
+            }
+            updateUploadButton();
+        }
+
+        // 输入防抖
+        blueprintNameInput.addEventListener('input', function() {
+            const val = this.value.trim();
+            clearTimeout(nameCheckTimer);
+            if (val === '') {
+                nameError.classList.remove('active');
+                isNameValid = false;
+                updateUploadButton();
+                return;
+            }
+            nameCheckTimer = setTimeout(() => checkFilename(val), 500);
+        });
+
+        // NBT文件选择
+        nbtFileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (!file.name.toLowerCase().endsWith('.nbt')) {
+                    showToast('请选择 .nbt 格式的文件', 'error');
+                    nbtFileInput.value = '';
+                    nbtFileNameDisplay.textContent = '未选择文件';
+                    selectedNbtFile = null;
+                } else {
+                    selectedNbtFile = file;
+                    nbtFileNameDisplay.textContent = file.name;
+                }
+            } else {
+                selectedNbtFile = null;
+                nbtFileNameDisplay.textContent = '未选择文件';
+            }
+            updateUploadButton();
+        });
+
+        // 图片选择与预览
+        imageFileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (!file.type.startsWith('image/')) {
+                    showToast('请选择图片文件', 'error');
+                    imageFileInput.value = '';
+                    imageFileNameDisplay.textContent = '未选择图片';
+                    selectedImageFile = null;
+                    imagePreview.classList.remove('has-image');
+                    previewImg.src = '';
+                } else {
+                    selectedImageFile = file;
+                    imageFileNameDisplay.textContent = file.name;
+                    const reader = new FileReader();
+                    reader.onload = function(ev) {
+                        previewImg.src = ev.target.result;
+                        imagePreview.classList.add('has-image');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            } else {
+                selectedImageFile = null;
+                imageFileNameDisplay.textContent = '未选择图片';
+                imagePreview.classList.remove('has-image');
+                previewImg.src = '';
+            }
+            updateUploadButton();
+        });
+
+        // 更新上传按钮状态
+        function updateUploadButton() {
+            const nameFilled = blueprintNameInput.value.trim() !== '';
+            const validName = isNameValid && nameFilled;
+            const hasNbt = selectedNbtFile !== null;
+            const hasImage = selectedImageFile !== null;
+            uploadBtn.disabled = !(validName && hasNbt && hasImage);
+        }
+
+        // 上传
+        uploadBtn.addEventListener('click', function() {
+            if (uploadBtn.disabled) return;
+            const blueprintName = blueprintNameInput.value.trim();
+            if (!blueprintName.endsWith('.nbt')) {
+                showToast('蓝图名称必须以 .nbt 结尾', 'error');
+                return;
+            }
+            if (!selectedNbtFile || !selectedImageFile) return;
+
+            // 再次快速检查名称（防止在上次检查后到上传期间被占用）
+            checkFilename(blueprintName).then(() => {
+                if (!isNameValid) {
+                    showToast('文件名已存在，请更换名称', 'error');
+                    return;
+                }
+                startUpload(blueprintName, selectedNbtFile, selectedImageFile);
+            });
+        });
+
+        function startUpload(filename, nbtFile, imageFile) {
+            uploadProgress.classList.add('active');
+            uploadProgress.innerHTML = '';
+            const progressItem = document.createElement('div');
+            progressItem.className = 'progress-item';
+            progressItem.innerHTML = `
+                <div class="progress-info">
+                    <div class="filename">${escapeHtml(filename)}</div>
+                    <div class="status">准备上传...</div>
+                    <div class="progress-bar-track"><div class="progress-bar-fill" style="width:0%"></div></div>
+                </div>
+                <span>⏳</span>`;
+            uploadProgress.appendChild(progressItem);
+            const statusEl = progressItem.querySelector('.status');
+            const fillEl = progressItem.querySelector('.progress-bar-fill');
+            const iconEl = progressItem.querySelector('span');
+
+            const formData = new FormData();
+            formData.append('filename', filename);
+            formData.append('nbtFile', nbtFile);
+            formData.append('imageFile', imageFile);
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '/upload', true);
+
+            xhr.upload.addEventListener('progress', function(e) {
+                if (e.lengthComputable) {
+                    const pct = Math.round((e.loaded / e.total) * 100);
+                    fillEl.style.width = pct + '%';
+                    statusEl.textContent = `上传中 ${pct}%`;
+                }
+            });
+
+            xhr.addEventListener('load', function() {
+                if (xhr.status >= 200 && xhr.status < 300) {
+                    progressItem.classList.add('completed');
+                    fillEl.style.width = '100%';
+                    statusEl.textContent = '上传成功 ✓';
+                    iconEl.textContent = '✅';
+                    showToast(`蓝图 "${filename}" 上传成功！`, 'success');
+                    // 清空表单
+                    blueprintNameInput.value = '';
+                    nbtFileInput.value = '';
+                    selectedNbtFile = null;
+                    nbtFileNameDisplay.textContent = '未选择文件';
+                    imageFileInput.value = '';
+                    selectedImageFile = null;
+                    imageFileNameDisplay.textContent = '未选择图片';
+                    imagePreview.classList.remove('has-image');
+                    previewImg.src = '';
+                    nameError.classList.remove('active');
+                    isNameValid = false;
+                    updateUploadButton();
+                    fetchFileList();
+                } else {
+                    progressItem.classList.add('error');
+                    statusEl.textContent = '上传失败';
+                    iconEl.textContent = '❌';
+                    let msg = '上传失败';
+                    try { const r = JSON.parse(xhr.responseText); msg = r.error || msg; } catch(e) {}
+                    showToast(msg, 'error');
+                }
+            });
+
+            xhr.addEventListener('error', function() {
+                progressItem.classList.add('error');
+                statusEl.textContent = '网络错误';
+                iconEl.textContent = '❌';
+                showToast('网络连接失败', 'error');
+            });
+
+            xhr.send(formData);
+
+            // 一段时间后隐藏进度条
+            setTimeout(() => {
+                if (uploadProgress.children.length === 1 && (progressItem.classList.contains('completed') || progressItem.classList.contains('error'))) {
+                    uploadProgress.classList.remove('active');
+                    uploadProgress.innerHTML = '';
+                }
+            }, 4000);
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        // 获取文件列表
+        async function fetchFileList() {
+            try {
+                const resp = await fetch('/files');
+                if (!resp.ok) throw new Error('获取列表失败');
+                const files = await resp.json();
+                renderFileList(files);
+            } catch (e) {
+                showToast('无法加载蓝图列表', 'error');
+            }
+        }
+
+        function renderFileList(files) {
+            fileTableBody.innerHTML = '';
+            fileCountEl.textContent = files.length;
+            if (files.length === 0) {
+                fileTableBody.innerHTML = `<tr><td colspan="5"><div class="empty-state">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg>
+                    <p>还没有蓝图，快来上传第一个吧</p></div></td></tr>`;
+                return;
+            }
+            files.sort((a,b) => new Date(b.uploadTime) - new Date(a.uploadTime));
+            files.forEach(file => {
+                const tr = document.createElement('tr');
+                const thumbSrc = file.imageUrl || '';
+                const thumbStyle = thumbSrc ? `background-image:url('${thumbSrc}')` : '';
+                const thumbClass = thumbSrc ? 'file-thumb' : 'file-thumb placeholder';
+                const thumbContent = thumbSrc ? '' : 'NBT';
+                const encodedName = encodeURIComponent(file.name);
+                tr.innerHTML = `
+                    <td><div class="${thumbClass}" style="${thumbStyle}">${thumbContent}</div></td>
+                    <td><div class="file-name-cell" title="${escapeHtml(file.name)}">${escapeHtml(file.name)}</div></td>
+                    <td>${formatFileSize(file.size)}</td>
+                    <td>${formatTime(file.uploadTime)}</td>
+                    <td><a href="/download/${encodedName}" class="btn btn-download btn-sm" download>⬇️ 下载</a></td>`;
+                fileTableBody.appendChild(tr);
+            });
+        }
+
+        btnRefresh.addEventListener('click', () => {
+            fetchFileList();
+            showToast('列表已刷新', 'info');
+        });
+
+        // 初始加载
+        fetchFileList();
+        setInterval(() => { fetchFileList(); }, 30000);
+
+        // 初始检查按钮状态
+        updateUploadButton();
+    })();
+</script>
+</body>
+</html>
